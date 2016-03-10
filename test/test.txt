@@ -1,0 +1,12 @@
+fibo(n) :: Int -> Int
+ = 0 [n == 0]
+ = 1 [n == 1]
+ = fibo(n-1) + fibo(n-2)
+where
+ who :: Int
+ =5
+ hoge :: Int
+ =6
+
+m :: Double
+=2
