@@ -1,8 +1,7 @@
-//EL ver3.141
-//lastModified: 2016/03/09
+//lastModified: 2016/03/10
 
 chunk = { S*  $(decl)  ('\n' S+ $(decl))* S* #Source}
-decl = iodecl / funcdecl / vardecl / listdecl
+decl = iodecl / funcdecl / vardecl
 
 //iodecl's structure
 iodecl = in / out
@@ -10,72 +9,51 @@ in = { 'cin' _ '>>' _ $target(name) #In}
 out = { 'cout' _ '<<' _ $target(value) #Out}
 
 //funcdecl's leftside tree
-funcdecl = { $name(name) '(' _ $arglist(arglist) _ ')' _ '::' _ $typelist(typelist) ('\n' $return(returnlist))? '\n' $othwiseret(othwiseret) $where(whereblock)? #Funcdecl}
+funcdecl = { $name(name) '(' _ $arglist(arglist) _ ')' _ ( $return(returnlist)　'\n' )? $othwiseret(othwiseret) $where(whereblock)? #Funcdecl}
 name = { !keyword ([a-z] / [A-Z])+ ([0-9] / [a-z] / [A-Z] / '_')* #Name}
 arglist = name {$left _ ',' _ $right(arglist) #Arglist}*
 arglist2 = value {$left _ ',' _ $right(arglist2) #ArglistII}*
-typelist = type {$left _ '->' _ $right(typelist) #Typelist}*
-type = elemtype / tapletype / listtype
-tapletype = '(' type {$left ',' $right(type) #Tapletype}* ')'
-listtype = '{' { $(type) #Listtype}'}'
-elemtype = {'Int' / 'Double' / 'String' / 'Bool' #Elemtype}
 returnlist = return {$left '\n' $right(returnlist) #Returnlist}*
 return = { _ '=' _ $retval(value) _ '[' _ $retcase(returncase) _ ']' #Return}
 othwiseret = { _ '=' _ $retval(value) ( _ '['_ 'otherwise' _ ']' )? #OthWiseRet}
 returncase = exp {$left _ ',' _ $right(exp) #Returncase}*
-whereblock = { '\n' _ 'where'  _ '\n' _ $declist(declist) #Where}
-declist = vldecl {$left '\n' _ $right( vldecl ) #Declist}*
+whereblock = { '\n' _ 'where' _ $declist(declist) #Where}
+declist = (vardecl / funcdecl) {$left '\n' _ $right( vardecl / funcdecl ) #Declist}*
+
+//needless
+type = elemtype
+elemtype= {'Int' / 'Bool' #Elemtype}
 
 //functioncall
 funcCall = { $name(name) '(' _ $arglist(arglist2) _ ')' #FuncCall}
 
 //value
-value = exp / listset / taple
-
-//list's tree
-listset = CList / RList / List
-List = {'{' _ ( $(value) _ $(',' _ value )*)? _ '}'#List}
-RList = {'{' _ (( $lower(numeral / literalString) _ '...' _ $upper(numeral / literalString) ) / ( $left(numeral / literalString) _ ',' _ $lower(numeral / literalString) _ '...' _ $upper(numeral / literalString))) _ '}' #RList}
-CList = {'{' _  $left(exp) _';' _ $right(condition) _ '}' #CList}
-condition = (of/exp) {$left _ ',' _ $right(of/exp) #Condition}*
-of = value {$left ( _ '<-' #Of _ $right(listset)) }*
-
-//taple's tree
-taple = {'(' _ ( $left(value) _ $right(',' _ value )*)? _ ')' #Taple}
+value = exp
 
 //vardecl tree
-vldecl = vardecl / listdecl
-vardecl = { $name(name) _ '::' _ $type(type) '\n' _ '=' _ !listset $value(value) #Vardecl}
-listdecl = { $name(name) _ '=' _ $list(listset) #Listdecl}
+vardecl = { $name(name) _ '=' _  $value(value) #Vardecl}
 
 //expression
 exp = exp0 {$left ( _ ('&&' #And / '||' #Or) _ $right(exp0)) }*
 exp0 = exp1 {$left ( _ ('==' #Equals / '!=' #NotEquals) _ $right(exp1)) }*
-exp1 = exp2 {$left ( _ ('<=' #LessThanEquals / '<' #LessThan / '>=' #GreaterThanEquals / '>' #GreaterThan) _ $right(exp2)) }*
-exp2 = exp3 {$left ( _ '|' #Bit_Or _ $right(exp3)) }*
-exp3 = exp4 {$left ( _ '~' #Bit_Exor _ $right(exp4)) }*
-exp4 = exp5 {$left ( _ '&' #Bit_And _ $right(exp5)) }*
-exp5 = exp6 {$left ( _ ('<<' #Left_shift / '>>' #Right_shift) _ $right(exp6)) }*
+exp1 = exp6 {$left ( _ ('<=' #LessThanEquals / '<' #LessThan / '>=' #GreaterThanEquals / '>' #GreaterThan) _ $right(exp6)) }*
 exp6 = exp7 {$left ( _ ('+' #Add / '-' #Sub) _ $right(exp7)) }*
 exp7 = exp8 {$left ( _ ('*' #Mul / '/' #Div) _ $right(exp8)) }*
-exp8 = exp9 {$left ( _ ('//' #Div_Int / '%' #Mod) _ $right(exp9)) }*
-exp9 = exp10 {$left ( _ '^' #Power _ $right(exp10)) }*
-exp10 = exps {$left ( _ ('!!' #LookUp / '++' #Connect) _ $right(exps)) }*
-exps =  nil / false / true / numeral / literalString / funcCall / name / { $(unop) $(exp) #Unop}
+exp8 = exp9 {$left ( _ ( '%' #Mod) _ $right(exp9)) }*
+exp9 = exps {$left ( _ '^' #Power _ $right(exps)) }*
+exps =  nil / false / true / numeral / funcCall / name / { $(unop) $(exp) #Unop}
 
-unop = {'-' #Minus} / {'!' #Not}  / {'~' #Bit_Not}
+unop = {'-' #Minus} / {'!' #Not}
 
 //tarminal element
-numeral = double / integer
+numeral = integer
 integer = {([1-9] [0-9]* / '0') #Integer}
-double = {([1-9] [0-9]* / '0') '.' [0-9]+  #Double}
-literalString = {('"' ([0-9a-zA-Z] / '_' / ',' / '?')+ '"') #LiteralString}
 nil = {'nil' #Nil}
 false = {'false' #False}
 true = {'true' #True}
 
-//EL's keyword
-keyword = 'otherwise' / 'Int' / 'Double' / 'String' / 'Bool' / 'nil' / 'true' / 'false' / 'where' / 'cin' / 'cout'
+// keywords
+keyword = 'otherwise' / 'Int'/ 'Bool' / 'nil' / 'true' / 'false' / 'where' / 'cin' / 'cout'
 
 S = [ \t\n\r]
 _ = [ \t]*
