@@ -13,6 +13,8 @@ public class Translator {
 			return new Mul(translate(node.get(0)), translate(node.get(1)));
 		case "Int":
 			return new Int(Integer.parseInt(node.toText()));
+		case "Name":
+			return new Name(node.toString());//これで良いのか??
 		case "LessThan":
 			return new LessThan(translate(node.get(0)), translate(node.get(1)));
 		case "GreaterThan":

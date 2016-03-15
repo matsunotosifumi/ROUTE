@@ -112,5 +112,10 @@ public class Evaluator extends CalcVisitor {
 		}
 		return null;
 	}
+
+	@Override
+	public Object visit(Name node) {
+		return node.str;
+	}
 	
 }

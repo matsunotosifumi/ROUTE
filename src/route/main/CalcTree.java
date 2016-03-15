@@ -171,3 +171,15 @@ class In extends CalcTree {
 	}
 	
 }
+
+class Name extends CalcTree{
+	String str;
+	public Name(String str) {
+		this.str = str;
+	}
+	@Override
+	public Object accept(CalcVisitor visitor) {
+		return visitor.visit(this);
+	}
+	
+}
