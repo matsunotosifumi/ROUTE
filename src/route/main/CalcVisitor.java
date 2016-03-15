@@ -20,4 +20,6 @@ public abstract class CalcVisitor {
 	public abstract Object visit(Int node);
 	
 	public abstract Object visit(Source node);
+	
+	public abstract Object visit(In node);
 }

@@ -1,6 +1,11 @@
 package route.main;
 
+import java.util.HashMap;
+import java.util.Scanner;
+
 public class Evaluator extends CalcVisitor {
+	
+	HashMap<String, Object> record = new HashMap<String, Object>();
 	
 	public Object eval(CalcTree node){
 		return node.accept(this);
@@ -87,6 +92,24 @@ public class Evaluator extends CalcVisitor {
 	@Override
 	public Object visit(Source node) {
 		
+		return null;
+	}
+
+	@Override
+	public Object visit(In node) {
+		String id = String.class.cast(node.child.get(0).accept(this));
+		Scanner scan = new Scanner(System.in);
+		switch (scan.next()) {
+		case "true":
+			record.put(id, true);
+			break;
+		case "false":
+			record.put(id, false);
+			break;
+		default:
+			record.put(id, Integer.class.cast(scan));
+			break;
+		}
 		return null;
 	}
 	

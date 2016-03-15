@@ -25,6 +25,8 @@ public class Translator {
 			return new Equals(translate(node.get(0)), translate(node.get(1)));
 		case "NotEquals":
 			return new NotEquals(translate(node.get(0)), translate(node.get(1)));
+		case "In":
+			return new In(translate(node.get(0))); 
 		default:
 			break;
 		}

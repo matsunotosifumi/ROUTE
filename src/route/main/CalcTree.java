@@ -159,3 +159,15 @@ class Int extends CalcTree {
 	}
 
 }
+
+class In extends CalcTree {
+	public In(CalcTree target){
+		this.child.add(target);
+	}
+	
+	@Override
+	public Object accept(CalcVisitor visitor) {
+		return visitor.visit(this);
+	}
+	
+}
