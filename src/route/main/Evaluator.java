@@ -86,7 +86,7 @@ public class Evaluator extends CalcVisitor {
 
 	@Override
 	public Object visit(Source node) {
-		// TODO 自動生成されたメソッド・スタブ
+		
 		return null;
 	}
 	

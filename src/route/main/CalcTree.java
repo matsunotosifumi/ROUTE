@@ -27,17 +27,11 @@ abstract class BinaryExpr extends CalcTree {
 
 class Source extends CalcTree {
 	
-	public Source(CommonTree node) {
+	public Source(CommonTree... node) {
 		super();
-		int i = 0;
-		CommonTree cnode;
-		while (true) {
-			cnode = node.get(i);
-			if (cnode == null) {
-				break;
-			}
+		for (int i = 0; i < node.length; i++) {
+			CommonTree cnode = node[i].get(i);
 			this.child.add(Translator.translate(cnode));
-			i++;
 		}
 	}
 
