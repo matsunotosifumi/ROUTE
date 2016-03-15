@@ -14,25 +14,10 @@ public class Evaluator extends CalcVisitor {
 	}
 
 	@Override
-
-	public Object visit(Sub node) {
-		Integer left = Integer.class.cast(node.child.get(0).accept(this));
-		Integer right = Integer.class.cast(node.child.get(1).accept(this));
-		return left - right;
-	}
-
-	@Override
 	public Object visit(Mul node) {
 		Integer left = Integer.class.cast(node.child.get(0).accept(this));
 		Integer right = Integer.class.cast(node.child.get(1).accept(this));
 		return left * right;
-	}
-
-	@Override
-	public Object visit(Div node) {
-		Integer left = Integer.class.cast(node.child.get(0).accept(this));
-		Integer right = Integer.class.cast(node.child.get(1).accept(this));
-		return left / right;
 	}
 
 	@Override
@@ -98,27 +83,11 @@ public class Evaluator extends CalcVisitor {
 		}
 		return true;
 	}
-	
-	@Override
-	
-	public Object visit(If node) {
-		Object left = (node.child.get(0).accept(this));
-		Object right = (node.child.get(1).accept(this));
-		Object rright = (node.child.get(2).accept(this));
-
-		if ((boolean) left) {
-			return right;
-		} else {
-			if (rright != null) {
-				return rright;
-			}
-			return left;
-		}
-	}
 
 	@Override
 	public Object visit(Source node) {
 		// TODO 自動生成されたメソッド・スタブ
 		return null;
 	}
+	
 }

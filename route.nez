@@ -33,14 +33,12 @@ value = exp
 //vardecl tree
 vardecl = { $name(name) _ '=' _  $value(value) #Vardecl}
 
-//expression
+//expression exp8, exp9は可換的半環ではない．
 exp = exp0 {$left ( _ ('&&' #And / '||' #Or) _ $right(exp0)) }*
 exp0 = exp1 {$left ( _ ('==' #Equals / '!=' #NotEquals) _ $right(exp1)) }*
 exp1 = exp6 {$left ( _ ('<=' #LessThanEquals / '<' #LessThan / '>=' #GreaterThanEquals / '>' #GreaterThan) _ $right(exp6)) }*
-exp6 = exp7 {$left ( _ ('+' #Add / '-' #Sub) _ $right(exp7)) }*
-exp7 = exp8 {$left ( _ ('*' #Mul / '/' #Div) _ $right(exp8)) }*
-exp8 = exp9 {$left ( _ ( '%' #Mod) _ $right(exp9)) }*
-exp9 = exps {$left ( _ '^' #Power _ $right(exps)) }*
+exp6 = exp7 {$left ( _ ('+' #Add) _ $right(exp7)) }*
+exp7 = exps {$left ( _ ('*' #Mul) _ $right(exps)) }*
 exps =  nil / false / true / numeral / funcCall / name / { $(unop) $(exp) #Unop}
 
 unop = {'-' #Minus} / {'!' #Not}

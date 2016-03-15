@@ -61,35 +61,9 @@ class Add extends BinaryExpr {
 
 }
 
-class Sub extends BinaryExpr {
-
-	public Sub(CalcTree left, CalcTree right) {
-		super(left, right);
-	}
-
-	@Override
-	public Object accept(CalcVisitor visitor) {
-		return visitor.visit(this);
-	}
-
-}
-
 class Mul extends BinaryExpr {
 
 	public Mul(CalcTree left, CalcTree right) {
-		super(left, right);
-	}
-
-	@Override
-	public Object accept(CalcVisitor visitor) {
-		return visitor.visit(this);
-	}
-
-}
-
-class Div extends BinaryExpr {
-
-	public Div(CalcTree left, CalcTree right) {
 		super(left, right);
 	}
 
@@ -177,23 +151,6 @@ class LessThanEquals extends BinaryExpr {
 	}
 
 }
-
-class If extends CalcTree {
-
-	public If(CalcTree left, CalcTree right, CalcTree rright) {
-		super();
-		this.child.add(left);
-		this.child.add(right);
-		this.child.add(rright);
-	}
-
-	@Override
-	public Object accept(CalcVisitor visitor) {
-		return visitor.visit(this);
-	}
-
-}
-
 
 class Int extends CalcTree {
 	int val;

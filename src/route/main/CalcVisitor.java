@@ -3,11 +3,7 @@ package route.main;
 public abstract class CalcVisitor {
 	public abstract Object visit(Add node);
 
-	public abstract Object visit(Sub node);
-
 	public abstract Object visit(Mul node);
-
-	public abstract Object visit(Div node);
 	
 	public abstract Object visit(Equals node);
 	
@@ -22,8 +18,6 @@ public abstract class CalcVisitor {
 	public abstract Object visit(LessThanEquals node);
 	
 	public abstract Object visit(Int node);
-	
-	public abstract Object visit(If node);
 	
 	public abstract Object visit(Source node);
 }
