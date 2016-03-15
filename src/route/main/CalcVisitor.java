@@ -60,11 +60,11 @@ public abstract class CalcVisitor {
 
 	public abstract Object visit(Not node);
 
-	public abstract Object visit(In node);
-
 	public abstract Object visit(Nil node);
 
 	public abstract Object visit(False node);
 
 	public abstract Object visit(True node);
+	
+	public abstract Object visit(In node);
 }

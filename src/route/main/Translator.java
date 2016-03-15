@@ -11,7 +11,7 @@ public class Translator {
 			return new Add(translate(node.get(0)), translate(node.get(1)));
 		case "Mul":
 			return new Mul(translate(node.get(0)), translate(node.get(1)));
-		case "Int":
+		case "Integer":
 			return new Int(Integer.parseInt(node.toText()));
 		case "Name":
 			return new Name(node.toString());//これで良いのか??
