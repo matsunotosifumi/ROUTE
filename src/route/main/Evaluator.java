@@ -88,6 +88,20 @@ public class Evaluator extends CalcVisitor {
 		}
 		return true;
 	}
+	
+	@Override
+	public Object visit(And node){
+		Boolean left = Boolean.class.cast(node.child.get(0).accept(this));
+		Boolean right = Boolean.class.cast(node.child.get(1).accept(this));
+		return left && right;
+	}
+	
+	@Override
+	public Object visit(Or node){
+		Boolean left = Boolean.class.cast(node.child.get(0).accept(this));
+		Boolean right = Boolean.class.cast(node.child.get(1).accept(this));
+		return left || right;
+	}
 
 	@Override
 	public Object visit(Source node) {
@@ -114,8 +128,25 @@ public class Evaluator extends CalcVisitor {
 	}
 
 	@Override
+	public Object visit(Out node){
+		String str = String.class.cast(node.child.get(0).accept(this));
+		System.out.println(str);
+		return null;
+	}
+	
+	@Override
 	public Object visit(Name node) {
 		return node.str;
+	}
+	
+	@Override
+	public Object visit(True node){
+		return node.bool;
+	}
+	
+	@Override
+	public Object visit(False node){
+		return node.bool;
 	}
 	
 }

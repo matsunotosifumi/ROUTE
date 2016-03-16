@@ -46,7 +46,7 @@ public abstract class CalcVisitor {
 
 	public abstract Object visit(Declist node);
 
-	public abstract Object visit(Elemtype node);
+	public abstract Object visit(Elemtype node);//型推論するからいらないのでは?
 
 	public abstract Object visit(FuncCall node);
 
@@ -54,7 +54,7 @@ public abstract class CalcVisitor {
 
 	public abstract Object visit(Or node);
 
-	public abstract Object visit(Unop node);
+	public abstract Object visit(Unop node);//unopあたりの扱いがクセ者かもしれない，eg.n=-x+1の木を生成してみよ
 
 	public abstract Object visit(Minus node);
 

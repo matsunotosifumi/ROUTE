@@ -146,6 +146,29 @@ class LessThanEquals extends BinaryExpr {
 
 }
 
+class And extends BinaryExpr {
+	public And(CalcTree left, CalcTree right){
+		super(left, right);
+	}
+
+	@Override
+	public Object accept(CalcVisitor visitor) {
+		return visitor.visit(this);
+	}
+}
+
+class Or extends BinaryExpr {
+	public Or(CalcTree left, CalcTree right){
+		super(left, right);
+	}
+
+	@Override
+	public Object accept(CalcVisitor visitor) {
+		return visitor.visit(this);
+	}
+	
+}
+
 class Int extends CalcTree {
 	int val;
 
@@ -172,6 +195,18 @@ class In extends CalcTree {
 	
 }
 
+class Out extends CalcTree{
+	public Out(CalcTree target){
+		this.child.add(target);
+	}
+
+	@Override
+	public Object accept(CalcVisitor visitor) {
+		return visitor.visit(this);
+	}
+	
+}
+
 class Name extends CalcTree{
 	String str;
 	public Name(String str) {
@@ -182,4 +217,26 @@ class Name extends CalcTree{
 		return visitor.visit(this);
 	}
 	
+}
+
+class True extends CalcTree{
+	Boolean bool;
+	public True(Boolean bool){
+		this.bool=bool;
+	}
+	@Override
+	public Object accept(CalcVisitor visitor) {
+		return visitor.visit(this);
+	}
+}
+
+class False extends CalcTree{
+	Boolean bool;
+	public False(Boolean bool) {
+		this.bool= bool;
+	}
+	@Override
+	public Object accept(CalcVisitor visitor) {
+		return visitor.visit(this);
+	}
 }

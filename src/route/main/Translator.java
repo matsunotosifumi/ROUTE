@@ -11,10 +11,6 @@ public class Translator {
 			return new Add(translate(node.get(0)), translate(node.get(1)));
 		case "Mul":
 			return new Mul(translate(node.get(0)), translate(node.get(1)));
-		case "Integer":
-			return new Int(Integer.parseInt(node.toText()));
-		case "Name":
-			return new Name(node.toString());//これで良いのか??
 		case "LessThan":
 			return new LessThan(translate(node.get(0)), translate(node.get(1)));
 		case "GreaterThan":
@@ -27,8 +23,20 @@ public class Translator {
 			return new Equals(translate(node.get(0)), translate(node.get(1)));
 		case "NotEquals":
 			return new NotEquals(translate(node.get(0)), translate(node.get(1)));
+		case "Or":
+			return new Or(translate(node.get(0)),translate(node.get(1)));
 		case "In":
-			return new In(translate(node.get(0))); 
+			return new In(translate(node.get(0)));
+		case "Out":
+			return new Out(translate(node.get(0)));
+		case "Integer":
+			return new Int(Integer.parseInt(node.toText()));
+		case "Name":
+			return new Name(node.toString());//これで良いのか??toStrとtoTexの違いは?
+		case "True":
+			return new True(Boolean.parseBoolean(node.toText()));
+		case "False":
+			return new True(Boolean.parseBoolean(node.toText()));
 		default:
 			break;
 		}
