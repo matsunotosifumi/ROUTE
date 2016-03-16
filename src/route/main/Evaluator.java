@@ -12,6 +12,26 @@ public class Evaluator extends CalcVisitor {
 	}
 
 	@Override
+	public Object visit(Source node) {
+		return null;
+	}
+	
+	@Override
+	public Object visit(Funcdecl node) {
+		String id = String.class.cast(node.child.get(0).accept(this));
+		HashMap<String, Object> subrecord = new HashMap<String, Object>();
+		//funcdecl.. not yet!
+		record.put(id, subrecord);
+		return null;
+	}
+	
+	@Override
+	public Object visit(Returnlist node) {
+		//return value is a list data structure?
+		return null;	
+	}
+	
+	@Override
 	public Object visit(Add node) {
 		Integer left = Integer.class.cast(node.child.get(0).accept(this));
 		Integer right = Integer.class.cast(node.child.get(1).accept(this));
@@ -102,11 +122,6 @@ public class Evaluator extends CalcVisitor {
 		Boolean right = Boolean.class.cast(node.child.get(1).accept(this));
 		return left || right;
 	}
-
-	@Override
-	public Object visit(Source node) {
-		return null;
-	}
 	
 	@Override
 	public Object visit(Vardecl node){
@@ -154,6 +169,14 @@ public class Evaluator extends CalcVisitor {
 	@Override
 	public Object visit(False node){
 		return node.bool;
+	}
+	
+	@Override
+	public Object visit(Unop node){
+		Object leftnode = node.child.get(0).accept(this);
+		Object rightnode = node.child.get(1).accept(this);
+		//Not yet! Also, Minus and Not
+		return rightnode;
 	}
 	
 }

@@ -60,7 +60,7 @@ public abstract class CalcVisitor {
 
 	public abstract Object visit(Not node);
 
-	public abstract Object visit(Nil node);
+	public abstract Object visit(Nil node);//wrong型
 
 	public abstract Object visit(False node);
 

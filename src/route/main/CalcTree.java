@@ -41,6 +41,32 @@ class Source extends CalcTree {
 	}
 }
 
+class Funcdecl extends CalcTree {
+	public Funcdecl(CommonTree... node) {
+		super();
+		for (int i = 0; i < node.length; i++) {
+			CommonTree cnode = node[i].get(i);
+			this.child.add(Translator.translate(cnode));
+		}
+	}
+
+	@Override
+	public Object accept(CalcVisitor visitor) {
+		return visitor.visit(this);
+	}
+}
+
+class Returnlist extends BinaryExpr {
+	public Returnlist(CalcTree left, CalcTree right){
+		super(left,right);
+	}
+
+	@Override
+	public Object accept(CalcVisitor visitor) {
+		return visitor.visit(this);
+	}
+}
+
 class Vardecl extends BinaryExpr {
 	
 	public Vardecl(CalcTree left, CalcTree right){
@@ -180,6 +206,17 @@ class Or extends BinaryExpr {
 	
 }
 
+class Unop extends BinaryExpr {
+	public Unop(CalcTree left, CalcTree right){
+		super(left,right);
+	}
+
+	@Override
+	public Object accept(CalcVisitor visitor) {
+		return visitor.visit(this);
+	}
+}
+
 class Int extends CalcTree {
 	int val;
 
@@ -250,4 +287,5 @@ class False extends CalcTree{
 	public Object accept(CalcVisitor visitor) {
 		return visitor.visit(this);
 	}
+	
 }
