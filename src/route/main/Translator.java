@@ -7,6 +7,8 @@ public class Translator {
 		switch (node.getTag().getSymbol()) {
 		case "Source":
 			return new Source(node);
+		case "Vardecl":
+			return new Vardecl(translate(node.get(0)), translate(node.get(1)));
 		case "Add":
 			return new Add(translate(node.get(0)), translate(node.get(1)));
 		case "Mul":

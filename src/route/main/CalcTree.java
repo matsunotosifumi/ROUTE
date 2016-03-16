@@ -41,6 +41,17 @@ class Source extends CalcTree {
 	}
 }
 
+class Vardecl extends BinaryExpr {
+	
+	public Vardecl(CalcTree left, CalcTree right){
+		super(left, right);
+	}
+
+	@Override
+	public Object accept(CalcVisitor visitor) {
+		return visitor.visit(this);
+	}
+}
 
 class Add extends BinaryExpr {
 

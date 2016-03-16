@@ -105,7 +105,14 @@ public class Evaluator extends CalcVisitor {
 
 	@Override
 	public Object visit(Source node) {
-		
+		return null;
+	}
+	
+	@Override
+	public Object visit(Vardecl node){
+		String id = String.class.cast(node.child.get(0).accept(this));
+		Integer val = Integer.class.cast(node.child.get(1).accept(this));
+		record.put(id, val);
 		return null;
 	}
 
