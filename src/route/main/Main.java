@@ -19,6 +19,7 @@ public class Main {
 				CalcTree cnode = Translator.translate(node);
 				Evaluator evaluator = new Evaluator();
 				evaluator.eval(cnode);
+				System.out.println("finish!");
 			}
 		} catch (IOException e) {
 			System.exit(1);

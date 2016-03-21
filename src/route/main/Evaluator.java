@@ -1,11 +1,12 @@
 package route.main;
 
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
+import java.io.IOException;
 
 public class Evaluator extends CalcVisitor {
 	
 	HashMap<String, Object> record = new HashMap<String, Object>();
+	Boolean record_ref;
 	
 	public Object eval(CalcTree node){
 		return node.accept(this);
@@ -13,22 +14,118 @@ public class Evaluator extends CalcVisitor {
 
 	@Override
 	public Object visit(Source node) {
+		record_ref = true;
+		for(int i = 0;i < node.child.size();i++){
+			Object buff = node.child.get(i).accept(this);
+			if(buff != null) System.exit(-1);
+		}
 		return null;
 	}
 	
 	@Override
 	public Object visit(Funcdecl node) {
+		record_ref = false;
 		String id = String.class.cast(node.child.get(0).accept(this));
-		HashMap<String, Object> subrecord = new HashMap<String, Object>();
-		//funcdecl.. not yet!
-		record.put(id, subrecord);
+		record_ref = true;
+		if(!record.containsKey(id)) record.put(id, node);
+		else{
+			System.err.println("you can't do destructive assignment");
+			System.exit(-1);
+		}
 		return null;
 	}
 	
 	@Override
+	public Object visit(Arglist node) {
+		return node.child;
+	}
+	
+	@Override
+	public Object visit(Arglist2 node) {
+		return node.child;
+	}
+	
+	@Override
 	public Object visit(Returnlist node) {
-		//return value is a list data structure?
-		return null;	
+		Object ret = null;
+		
+		for(int i=0;i<node.child.size();i++){
+			ret = node.child.get(i).accept(this);
+			if(ret != null) break;
+		}
+		
+		return ret;	
+	}
+	
+	@Override
+	public Object visit(Return node) {
+		if(Boolean.class.cast(node.child.get(1).accept(this))) return node.child.get(0).accept(this);
+		else return null;
+	}
+	
+	@Override
+	public Object visit(OthwiseRet node) {
+		return node.child.get(0).accept(this);
+	}
+	
+	@Override
+	public Object visit(Returncase node) {
+		Boolean left = Boolean.class.cast(node.child.get(0).accept(this));
+		Boolean right = Boolean.class.cast(node.child.get(1).accept(this));
+		return left && right;
+	}
+	
+	@Override
+	public Object visit(Where node) {
+		return node.child.get(0).accept(this);
+	}
+	
+	@Override
+	public Object visit(Declist node) {
+		node.child.get(0).accept(this);
+		node.child.get(1).accept(this);
+		return null;
+	}
+	
+	@Override
+	public Object visit(FuncCall node) {
+		HashMap<String, Object> buff = new HashMap<String, Object>(record);
+		@SuppressWarnings("unchecked")
+		List<CalcTree> arg2 = (List<CalcTree>) node.child.get(1).accept(this);
+		Funcdecl cnode = Funcdecl.class.cast(node.child.get(0).accept(this));
+		@SuppressWarnings("unchecked")
+		List<CalcTree> arg = (List<CalcTree>) cnode.child.get(1).accept(this);
+		List<Object> arg2_val = new ArrayList<Object>();
+		Object ret;
+		
+		for(int i = 0;i<arg2.size();i++){
+			arg2_val.add(arg2.get(i).accept(this));
+		}
+		
+		record.clear();
+		
+		
+		record_ref = false;
+		
+		record.put(String.class.cast(cnode.child.get(0).accept(this)), cnode);
+		
+		for(int i=0;i<arg.size();i++){
+			String id = String.class.cast(arg.get(i).accept(this));
+			if(!record.containsKey(id)) record.put(id, arg2_val.get(i));
+			else{
+				System.err.println("you can't do destructive assignment");
+				System.exit(-1);
+			}
+		}
+		
+		if(cnode.child.size() == 4) cnode.child.get(3).accept(this);
+		
+		record_ref = true;
+		
+		ret = cnode.child.get(2).accept(this);
+		
+		record = buff;
+		return ret;
 	}
 	
 	@Override
@@ -125,17 +222,30 @@ public class Evaluator extends CalcVisitor {
 	
 	@Override
 	public Object visit(Vardecl node){
+		record_ref = false;
 		String id = String.class.cast(node.child.get(0).accept(this));
-		Integer val = Integer.class.cast(node.child.get(1).accept(this));
-		record.put(id, val);
+		record_ref = true;
+		if(!record.containsKey(id)) record.put(id, node.child.get(1).accept(this));
+		else{
+			System.err.println("you can't do destructive assignment");
+			System.exit(-1);
+		}
 		return null;
 	}
 
 	@Override
 	public Object visit(In node) {
+		record_ref = false;
 		String id = String.class.cast(node.child.get(0).accept(this));
+		record_ref = true;
+		if(record.containsKey(id)){
+			System.err.println("you can't do destructive assignment");
+			System.exit(-1);
+		}
 		Scanner scan = new Scanner(System.in);
-		switch (scan.next()) {
+		System.err.println("please input of " + id);
+		String in = scan.next();
+		switch (in) {
 		case "true":
 			record.put(id, true);
 			break;
@@ -143,7 +253,7 @@ public class Evaluator extends CalcVisitor {
 			record.put(id, false);
 			break;
 		default:
-			record.put(id, Integer.class.cast(scan));
+			record.put(id, Integer.parseInt(in));
 			break;
 		}
 		return null;
@@ -151,32 +261,29 @@ public class Evaluator extends CalcVisitor {
 
 	@Override
 	public Object visit(Out node){
-		String str = String.class.cast(node.child.get(0).accept(this));
-		System.out.println(str);
+		System.out.println(node.child.get(0).accept(this));
 		return null;
 	}
 	
 	@Override
 	public Object visit(Name node) {
+		if(record.containsKey(node.str) && record_ref) return record.get(node.str);
 		return node.str;
 	}
 	
 	@Override
-	public Object visit(True node){
+	public Object visit(Bool node){
 		return node.bool;
 	}
 	
 	@Override
-	public Object visit(False node){
-		return node.bool;
+	public Object visit(Minus node){
+		return -1 * Integer.class.cast(node.child.get(0).accept(this));
 	}
 	
 	@Override
-	public Object visit(Unop node){
-		Object leftnode = node.child.get(0).accept(this);
-		Object rightnode = node.child.get(1).accept(this);
-		//Not yet! Also, Minus and Not
-		return rightnode;
+	public Object visit(Not node){
+		return !Boolean.class.cast(node.child.get(0).accept(this));
 	}
 	
 }

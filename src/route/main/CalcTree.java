@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nez.ast.CommonTree;
-import route.main.Translator;
 
 public abstract class CalcTree {
 	List<CalcTree> child;
@@ -27,14 +26,13 @@ abstract class BinaryExpr extends CalcTree {
 
 class Source extends CalcTree {
 	
-	public Source(CommonTree... node) {
+	public Source(CommonTree node) {
 		super();
-		for (int i = 0; i < node.length; i++) {
-			CommonTree cnode = node[i].get(i);
-			this.child.add(Translator.translate(cnode));
+		for (int i = 0; i < node.size(); i++) {
+			this.child.add(Translator.translate(node.get(i)));
 		}
 	}
-
+	
 	@Override
 	public Object accept(CalcVisitor visitor) {
 		return visitor.visit(this);
@@ -42,11 +40,10 @@ class Source extends CalcTree {
 }
 
 class Funcdecl extends CalcTree {
-	public Funcdecl(CommonTree... node) {
+	public Funcdecl(CommonTree node) {
 		super();
-		for (int i = 0; i < node.length; i++) {
-			CommonTree cnode = node[i].get(i);
-			this.child.add(Translator.translate(cnode));
+		for (int i = 0; i < node.size(); i++) {
+			this.child.add(Translator.translate(node.get(i)));
 		}
 	}
 
@@ -56,11 +53,15 @@ class Funcdecl extends CalcTree {
 	}
 }
 
-class Returnlist extends BinaryExpr {
-	public Returnlist(CalcTree left, CalcTree right){
-		super(left,right);
+class Returnlist extends CalcTree {
+	
+	public Returnlist(CommonTree node) {
+		super();
+		for (int i = 0; i < node.size(); i++) {
+			this.child.add(Translator.translate(node.get(i)));
+		}
 	}
-
+	
 	@Override
 	public Object accept(CalcVisitor visitor) {
 		return visitor.visit(this);
@@ -206,17 +207,6 @@ class Or extends BinaryExpr {
 	
 }
 
-class Unop extends BinaryExpr {
-	public Unop(CalcTree left, CalcTree right){
-		super(left,right);
-	}
-
-	@Override
-	public Object accept(CalcVisitor visitor) {
-		return visitor.visit(this);
-	}
-}
-
 class Int extends CalcTree {
 	int val;
 
@@ -267,6 +257,7 @@ class Name extends CalcTree{
 	
 }
 
+/*
 class True extends CalcTree{
 	Boolean bool;
 	public True(Boolean bool){
@@ -288,4 +279,129 @@ class False extends CalcTree{
 		return visitor.visit(this);
 	}
 	
+}
+*/
+class Bool extends CalcTree{
+	Boolean bool;
+	public Bool(Boolean bool){
+		this.bool=bool;
+	}
+	@Override
+	public Object accept(CalcVisitor visitor) {
+		return visitor.visit(this);
+	}
+}
+
+class Arglist extends CalcTree {
+	
+	public Arglist(CommonTree node) {
+		super();
+		for (int i = 0; i < node.size(); i++) {
+			this.child.add(Translator.translate(node.get(i)));
+		}
+	}
+	
+	@Override
+	public Object accept(CalcVisitor visitor) {
+		return visitor.visit(this);
+	}
+}
+
+class Arglist2 extends CalcTree {
+	
+	public Arglist2(CommonTree node) {
+		super();
+		for (int i = 0; i < node.size(); i++) {
+			this.child.add(Translator.translate(node.get(i)));
+		}
+	}
+	
+	@Override
+	public Object accept(CalcVisitor visitor) {
+		return visitor.visit(this);
+	}
+}
+
+class Return extends BinaryExpr{
+	public Return(CalcTree left, CalcTree right){
+		super(left,right);
+	}
+
+	@Override
+	public Object accept(CalcVisitor visitor) {
+		return visitor.visit(this);
+	}
+}
+
+class OthwiseRet extends CalcTree{
+	public OthwiseRet(CalcTree ret){
+		this.child.add(ret);
+	}
+	@Override
+	public Object accept(CalcVisitor visitor) {
+		return visitor.visit(this);
+	}
+}
+
+class Returncase extends BinaryExpr{
+	public Returncase(CalcTree left, CalcTree right){
+		super(left,right);
+	}
+
+	@Override
+	public Object accept(CalcVisitor visitor) {
+		return visitor.visit(this);
+	}
+}
+
+class Where extends CalcTree{
+	public Where(CalcTree ret){
+		this.child.add(ret);
+	}
+	@Override
+	public Object accept(CalcVisitor visitor) {
+		return visitor.visit(this);
+	}
+}
+
+class Declist extends BinaryExpr{
+	public Declist(CalcTree left, CalcTree right){
+		super(left,right);
+	}
+
+	@Override
+	public Object accept(CalcVisitor visitor) {
+		return visitor.visit(this);
+	}
+}
+
+class FuncCall extends BinaryExpr{
+	public FuncCall(CalcTree left, CalcTree right){
+		super(left,right);
+	}
+
+	@Override
+	public Object accept(CalcVisitor visitor) {
+		return visitor.visit(this);
+	}
+}
+
+class Minus extends CalcTree{
+	public Minus(CalcTree ret){
+		this.child.add(ret);
+	}
+	@Override
+	public Object accept(CalcVisitor visitor) {
+		return visitor.visit(this);
+	}
+}
+
+class Not extends CalcTree{
+	public Not(CalcTree ret){
+		this.child.add(ret);
+	}
+	@Override
+	public Object accept(CalcVisitor visitor) {
+		return visitor.visit(this);
+	}
 }

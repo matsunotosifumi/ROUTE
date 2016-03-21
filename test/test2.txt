@@ -1,0 +1,14 @@
+a = true
+
+b(n) = n
+
+fobo(n, m, l) = n + m + l [n == 1, m <= 2, l != 5]
+              = n + m * l [n == 2]
+              = n * m * l [n == 3]
+              = n + m + l [otherwise]
+where c = d
+c = x(n, m, d)
+
+d = (1 + 2) * -(---3 + 4)
+
+cout << d

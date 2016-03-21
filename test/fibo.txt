@@ -1,4 +1,5 @@
-fibo(n) :: Int -> Int
- = 0 [n == 0]
- = 1 [n == 1]
- = fibo(n-1) + fibo(n-2)
+fibo(n) = 0 [ n == 0 ]
+        = 1 [ n == 1 ]
+        = fibo(n+-1) + fibo(n+-2)
+
+cout << fibo(10)
