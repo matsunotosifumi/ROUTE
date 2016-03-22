@@ -31,6 +31,8 @@ public class Translator {
 			return new Vardecl(translate(node.get(0)), translate(node.get(1)));
 		case "Add":
 			return new Add(translate(node.get(0)), translate(node.get(1)));
+		case "Sub":
+			return new Add(translate(node.get(0)), new Minus(translate(node.get(1))));
 		case "Mul":
 			return new Mul(translate(node.get(0)), translate(node.get(1)));
 		case "LessThan":
