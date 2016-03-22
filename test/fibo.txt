@@ -3,3 +3,25 @@ fibo(n) = 0 [ n == 0 ]
         = fibo(n+-1) + fibo(n+-2)
 
 cout << fibo(10)
+
+cout << fibo(5)
+
+n = fibo(5)
+
+cout << n
+
+calc(n, m, l) = nml * mul(n, m, l)
+where nml = n + m + l
+      mul(n, m, l) = n * m * l
+
+cout << calc(1, 2, 1 + 4)
+
+t = true
+
+f = false
+
+cout << t && !f
+
+cin >> d
+
+cout << d

@@ -1,4 +1,4 @@
-source = { S*  $(decl)  ( _ '\r\n' _ S+ $(decl) )* #Source} .*
+source = { S*  $(decl)  ( _ ('\r\n' / '\n') _ S+ $(decl) )* #Source} .*
 decl = iodecl / funcdecl / vardecl
 
 //iodecl's structure
@@ -11,12 +11,12 @@ funcdecl = { $name(name) '(' _ $arglist(arglist) _ ')' _ $returnlist(returnlist)
 name = { !keyword ([a-z] / [A-Z])+ ([0-9] / [a-z] / [A-Z] / '_')* #Name}
 arglist = {$arg(name) _ (',' _ $arg(name))* #Arglist}
 arglist2 = {$arg2(value) _ (',' _ $arg2(value))* #Arglist2}
-returnlist = { ($return(return) ('\r\n' $return(return))* '\r\n')* $othwiseret(othwiseret) #Returnlist}
+returnlist = { ($return(return) (('\r\n' / '\n') $return(return))* ('\r\n' / '\n'))* $othwiseret(othwiseret) #Returnlist}
 return = { _ '=' _ $retval(value) _ '[' _ $retcase(returncase) _ ']' #Return}
 othwiseret = { _ '=' _ $retval(value) ( _ '['_ 'otherwise' _ ']' )? #OthwiseRet}
 returncase = exp {$left _ ',' _ $right(exp) #Returncase}*
-whereblock = { '\r\n' _ 'where' _ $declist(declist) #Where}
-declist = (vardecl / funcdecl) {$left '\r\n' _ $right( vardecl / funcdecl ) #Declist}*
+whereblock = { ('\r\n' / '\n') _ 'where' _ $declist(declist) #Where}
+declist = (vardecl / funcdecl) {$left ('\r\n' / '\n') _ $right( vardecl / funcdecl ) #Declist}*
 
 //needless
 type = elemtype
@@ -36,7 +36,7 @@ exp0 = exp1 {$left ( _ ('==' #Equals / '!=' #NotEquals) _ $right(exp1)) }*
 exp1 = exp6 {$left ( _ ('<=' #LessThanEquals / '<' #LessThan / '>=' #GreaterThanEquals / '>' #GreaterThan) _ $right(exp6)) }*
 exp6 = exp7 {$left ( _ ('+' #Add) _ $right(exp7)) }*
 exp7 = exps {$left ( _ ('*' #Mul) _ $right(exps)) }*
-exps =  '(' exp ')' / nil / false / true / numeral / funcCall / name / unop $(exps)
+exps =  '(' _ exp _ ')' / nil / false / true / numeral / funcCall / name / unop $(exps)
 
 unop = {'-' #Minus} / {'!' #Not}
 

@@ -225,7 +225,8 @@ public class Evaluator extends CalcVisitor {
 		record_ref = false;
 		String id = String.class.cast(node.child.get(0).accept(this));
 		record_ref = true;
-		if(!record.containsKey(id)) record.put(id, node.child.get(1).accept(this));
+		Object val = node.child.get(1).accept(this);
+		if(!record.containsKey(id)) record.put(id, val);
 		else{
 			System.err.println("you can't do destructive assignment");
 			System.exit(-1);
@@ -243,7 +244,7 @@ public class Evaluator extends CalcVisitor {
 			System.exit(-1);
 		}
 		Scanner scan = new Scanner(System.in);
-		System.err.println("please input of " + id);
+		System.err.println("please input \"" + id + "\"");
 		String in = scan.next();
 		switch (in) {
 		case "true":
